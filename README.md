@@ -1,4 +1,3 @@
-cat << 'EOF' > README.md
 # Kurbanlik Takip ve Dijital Pazarlik Otomasyon Sistemi (V1.0)
 
 ASP.NET Core MVC mimarisi kullanılarak geliştirilmiş, canlı hayvan envanter yönetimini, borsa fiyat analitiğini ve alıcı-satıcı arasındaki pazarlık süreçlerini uçtan uca dijitalleştiren kurumsal bir ERP yazılımıdır.
@@ -12,9 +11,9 @@ Sistem, geleneksel hayvancılık ticaretindeki veri kayıplarını, küpe numara
 
 ## Teknolojik Altyapi (Tech Stack)
 
-* Framework: .NET 8.0 (ASP.NET Core MVC)
+* Framework: .NET 10.0 (ASP.NET Core MVC)
 * Programlama Dili: C# 12
-* ORM / Veritabanı: Entity Framework Core 8.0 & SQL Server (MSSQL)
+* ORM / Veritabanı: Entity Framework Core 9.0 & SQL Server (MSSQL)
 * Önyüz (Frontend): Bootstrap 5, Chart.js, ToastrJS, jQuery, FontAwesome 6
 
 ---
