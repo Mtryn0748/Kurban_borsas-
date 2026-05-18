@@ -1,0 +1,107 @@
+﻿@model Kurban.Models.Animal
+
+<div class="container mt-5 text-dark">
+    <div class="card shadow border-0" style="max-width: 700px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-file-medical"></i> Kurbanlık / Envanter Giriş Kartı</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Küpe Numarası</label>
+                        <input asp-for="AnimalEarringNumber" class="form-control" placeholder="Örn: TR45001" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Ana Tür Kategori</label>
+                        <select asp-for="BreedId" id="BreedId" class="form-select" asp-items="ViewBag.Breeds" required>
+                            <option value="">-- Seçiniz --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Irkı / Belirgin Özelliği</label>
+                        <input asp-for="AnimalName" class="form-control" placeholder="Örn: Simental, Merinos, Denizli Horozu" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Yaşı / Dönemi</label>
+                        <input asp-for="Age" class="form-control" placeholder="Örn: 2 Yaşında, 6 Aylık" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Canlı Ağırlık (kg)</label>
+                        <input asp-for="AnimalWeight" type="number" step="0.001" id="AnimalWeight" class="form-control" placeholder="0.000" required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Referans Kg Fiyatı (₺)</label>
+                        <input asp-for="PricePerKg" type="number" step="0.01" id="PricePerKg" class="form-control" placeholder="0.00" required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Sınıflandırma</label>
+                        <select asp-for="InventoryStatus" class="form-select" required>
+                            <option value="Satılık">Satılık</option>
+                            <option value="Damızlık">Damızlık</option>
+                            <option value="Yeni Doğan">Yeni Doğan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3 alert alert-info border-0 mt-4 d-none" id="dssPanel" style="border-radius: 10px;">
+                    <div class="fw-bold text-primary mb-1" style="font-size: 13px;">
+                        <i class="fa-solid fa-brain"></i> Mühendislik Karar Destek Öneri Motoru
+                    </div>
+                    <span id="dssMessage" style="font-size: 14px; color: #1e293b;"></span>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold">Hayvanı Envantere Kaydet</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Listeye Dön</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const weightInput = document.getElementById('AnimalWeight');
+    const breedSelect = document.getElementById('BreedId');
+    const priceInput = document.getElementById('PricePerKg');
+    const dssPanel = document.getElementById('dssPanel');
+    const dssMessage = document.getElementById('dssMessage');
+
+    function runDecisionSupport() {
+        const weight = parseFloat(weightInput.value) || 0;
+        if (weight <= 0 || breedSelect.selectedIndex <= 0) {
+            dssPanel.classList.add('d-none');
+            return;
+        }
+
+        const breedText = breedSelect.options[breedSelect.selectedIndex].text.toLowerCase();
+        dssPanel.classList.remove('d-none');
+
+        let suggestedKgPrice = 350; // Güvenli varsayılan fiyat
+
+        // Kesin Kategori Eşleme Kuralları
+        if (breedText.includes("büyükbaş")) {
+            suggestedKgPrice = weight > 400 ? 320 : 340;
+        } else if (breedText.includes("küçükbaş")) {
+            suggestedKgPrice = weight > 60 ? 390 : 420;
+        } else if (breedText.includes("kanatlı") || breedText.includes("tavuk") || breedText.includes("horoz")) {
+            suggestedKgPrice = 120; // Kanatlı hayvanlar için mantıklı kg fiyatı
+        }
+
+        const estimatedValue = weight * suggestedKgPrice;
+
+        dssMessage.innerHTML = `Sistem Analizi: Seçilen türe göre ideal referans <strong>Kg Fiyatı: ${suggestedKgPrice} ₺</strong>'dir. <br/>Bu doğrultuda tahmini piyasa değeri: <strong>${estimatedValue.toLocaleString('tr-TR', {minimumFractionDigits: 2})} ₺</strong> olarak hesaplanmıştır.`;
+
+        // Satıcıya kolaylık: Kg fiyatı boşsa otomatik önerileni doldur
+        if (priceInput.value == "" || priceInput.value == 0) {
+            priceInput.value = suggestedKgPrice;
+        }
+    }
+
+    weightInput.addEventListener('input', runDecisionSupport);
+    breedSelect.addEventListener('change', runDecisionSupport);
+</script>

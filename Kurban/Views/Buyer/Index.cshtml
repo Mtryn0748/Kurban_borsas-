@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Kurban.Models.Sale>
+
+<div class="container mt-4">
+    <h2>Müşteri Finans Yönetim Paneli</h2>
+    <p class="text-muted">Satın aldığınız kurbanlıklar ve mali durum raporunuz</p>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow border-0" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-uppercase mb-1" style="font-size: 12px; opacity: 0.8;">Toplam Net Harcama</h6>
+                    <h2 class="font-weight-bold mb-0">@(Model.Sum(s => s.SalePrice + s.SlaughterPrice).ToString("C2"))</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary shadow border-0" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-uppercase mb-1" style="font-size: 12px; opacity: 0.8;">Satın Alınan Hayvan Adedi</h6>
+                    <h2 class="font-weight-bold mb-0">@Model.Count() Adet</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary shadow border-0" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-uppercase mb-1" style="font-size: 12px; opacity: 0.8;">Hizmet & Kesim Bedeli</h6>
+                    <h2 class="font-weight-bold mb-0">@(Model.Sum(s => s.SlaughterPrice).ToString("C2"))</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5 mb-3"><i class="fa-solid fa-file-contract"></i> Onaylı Satış Sözleşmelerim</h3>
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; background: #fff; padding: 20px;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">@(item.Animal?.Breed?.BreedName ?? "Belirtilmemiş")</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Küpe No: @(item.Animal?.AnimalEarringNumber ?? "-")</h6>
+                            <hr />
+                            <p><strong>Canlı Ağırlık:</strong> @(item.Animal?.AnimalWeight.ToString("0.000") ?? "0") kg</p>
+                            <p><strong>Pazarlık Fiyatı:</strong> @item.SalePrice.ToString("C2")</p>
+                            <p><strong>Kesim / Lojistik Bedeli:</strong> @item.SlaughterPrice.ToString("C2")</p>
+                            <p class="fs-5 text-success" style="border-top: 1px dashed #cbd5e1; pt-2; font-weight:700;">
+                                <strong>Toplam Ödenen:</strong> @((item.SalePrice + item.SlaughterPrice).ToString("C2"))
+                            </p>
+                            <p><strong>Lojistik / Teslimat:</strong> @item.DeliveryType</p>
+                            <p><strong>Teslim Tarihi:</strong> @item.PickupDate.ToString("dd.MM.yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted mt-4">
+                <h4>Henüz satın aldığınız bir kurbanlık bulunmamaktadır.</h4>
+            </div>
+        }
+    </div>
+</div>

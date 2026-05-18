@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Kurbanlık Takip</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin-theme.css" />
+    <style>
+        body {
+            background-color: var(--bg-main-content);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-card {
+            width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <h3 style="color: var(--accent-blue); font-weight: 700;">Kurbanlık Otomasyonu</h3>
+            <p class="text-muted">Lütfen hesabınıza giriş yapın</p>
+        </div>
+
+        <form asp-controller="Home" asp-action="Login" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-bold">E-Posta Adresi</label>
+                <input type="email" name="email" class="form-control" placeholder="admin@kurban.com" required />
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Şifre</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••" required />
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Giriş Yap</button>
+            </div>
+            <div class="text-center mt-3">
+                <a asp-action="Register" class="text-decoration-none text-secondary" style="font-size: 14px;">Henüz hesabınız yok mu? <strong>Kayıt Olun</strong></a>
+            </div>  
+        </form>
+    </div>
+
+</body>
+</html>

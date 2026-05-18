@@ -1,0 +1,24 @@
+﻿@model Kurban.Models.Breed
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 500px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-pen-to-square"></i> Tür Düzenle</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label class="form-label">Tür / Cins Adı</label>
+                    <input asp-for="BreedName" class="form-control" required />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Değişiklikleri Kaydet</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

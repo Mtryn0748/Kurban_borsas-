@@ -1,0 +1,31 @@
+﻿@model Kurban.Models.Breed
+
+@{
+    ViewData["Title"] = "Yeni Tür Ekle";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Yeni Kurban Türü Kaydet</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="form-group mb-3">
+                            <label class="form-label font-weight-bold">Tür/Cins Adı</label>
+                            <input asp-for="BreedName" class="form-control" placeholder="Örn: Büyükbaş, Küçükbaş, Kanatlı" />
+                            <span asp-validation-for="BreedName" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Listeye Dön</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

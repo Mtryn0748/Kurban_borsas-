@@ -1,0 +1,117 @@
+﻿@model Kurban.Models.Sale
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 850px; margin: auto;">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-file-invoice-dollar"></i> Kurban Satış ve Lojistik Sözleşmesi</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+
+                <div class="row text-dark">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Satılacak Kurbanlık</label>
+                        <select asp-for="AnimalId" id="AnimalId" class="form-select" asp-items="ViewBag.Animals" required>
+                            <option value="">-- Hayvan Seçiniz --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Alıcı Müşteri</label>
+                        <select asp-for="BuyerId" class="form-select" asp-items="ViewBag.Buyers" required>
+                            <option value="">-- Müşteri Seçiniz --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2 text-dark">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">Pazarlık Kg Fiyatı (Yardımcı)</label>
+                        <input type="number" id="helperKgPrice" class="form-control" placeholder="Örn: 400" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-muted">Önerilen Piyasa Ederi</label>
+                        <input type="text" id="helperResult" class="form-control" style="background-color: #f1f5f9; font-weight: 600;" readonly placeholder="0.00 ₺" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold text-success">Nihai Anlaşılan Fiyat (₺)</label>
+                        <input asp-for="SalePrice" type="number" id="finalSalePrice" class="form-control" style="border: 2px solid var(--accent-green); font-weight: 700; font-size: 16px;" placeholder="El sıkışılan rakam" required />
+                    </div>
+                </div>
+
+                <div class="row mt-2 text-dark">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Satış Amacı / Türü</label>
+                        <select asp-for="UsageType" class="form-select" required>
+                            <option value="Kurbanlık">Kurbanlık</option>
+                            <option value="Adaklık">Adaklık</option>
+                            <option value="Akika">Akika</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Teslimat ve Kesim Modeli</label>
+                        <select asp-for="DeliveryType" class="form-select" required>
+                            <option value="Tesiste Kesilecek">Tesiste Kesilecek (Hisse/Paket)</option>
+                            <option value="Alıp Gidecek">Kendisi Götürecek (Canlı Teslim)</option>
+                            <option value="Kamyonla Eve Teslim">Kamyonla Adrese Teslim Edilecek</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2 text-dark">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Teslim Alma Tarihi</label>
+                        <input asp-for="PickupDate" type="date" class="form-control" required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Kesim / Nakliye Bedeli (₺)</label>
+                        <input asp-for="SlaughterPrice" type="number" class="form-control" value="0" required />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Özel Sevk / Pazarlık Notları</label>
+                        <input asp-for="Notes" class="form-control" placeholder="Örn: Kapora alındı." />
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="OwnerId" value="0" />
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">Sözleşmeyi Onayla ve Envanteri Kilitle</button>
+                    <a asp-controller="Sale" asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const animalSelect = document.getElementById('AnimalId');
+    const helperKgPrice = document.getElementById('helperKgPrice');
+    const helperResult = document.getElementById('helperResult');
+    const finalSalePrice = document.getElementById('finalSalePrice');
+
+    function calculateBargain() {
+        if(animalSelect.selectedIndex <= 0) return;
+        const selectedText = animalSelect.options[animalSelect.selectedIndex].text;
+
+        // Dropdown metninden Regex yardımıyla canlı kiloyu ayıklıyoruz
+        const weightMatch = selectedText.match(/\((\d+(?:\.\d+)?)\s*kg\)/);
+
+        if (weightMatch && weightMatch[1]) {
+            const weight = parseFloat(weightMatch[1]);
+            const kgPrice = parseFloat(helperKgPrice.value) || 0;
+            const suggestedTotal = weight * kgPrice;
+
+            helperResult.value = suggestedTotal.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+
+            if(finalSalePrice.value == "" || finalSalePrice.value == 0) {
+                finalSalePrice.value = suggestedTotal.toFixed(2);
+            }
+        }
+    }
+
+    helperKgPrice.addEventListener('input', calculateBargain);
+    animalSelect.addEventListener('change', () => {
+        finalSalePrice.value = "";
+        calculateBargain();
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿@model Kurban.Models.Animal
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-circle-info"></i> Kurbanlık / Envanter Detay Kartı</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3"><strong>Küpe Numarası:</strong> <span class="text-muted">@Model.AnimalEarringNumber</span></div>
+            <div class="mb-3"><strong>Ana Kategori:</strong> <span class="text-muted">@(Model.Breed != null ? Model.Breed.BreedName : "Belirtilmemiş")</span></div>
+            <div class="mb-3"><strong>Irk / Belirgin Özellik:</strong> <span class="text-muted">@Model.AnimalName</span></div>
+            <div class="mb-3"><strong>Yaşı / Dönemi:</strong> <span class="text-muted">@Model.Age</span></div>
+            <div class="mb-3"><strong>Canlı Ağırlık:</strong> <span class="text-muted">@Model.AnimalWeight kg</span></div>
+
+            <div class="mb-3">
+                <strong>Envanter Sınıfı:</strong>
+                @if (Model.InventoryStatus == "Satılık")
+                {
+                    <span class="badge bg-info">Satılık</span>
+                }
+                else if (Model.InventoryStatus == "Damızlık")
+                {
+
+                    <span class="badge bg-warning text-dark">Damızlık</span>
+                }
+                else
+                {
+
+                    <span class="badge bg-secondary">Yeni Doğan</span>
+                }
+            </div>
+
+            <div class="mb-3">
+                <strong>Satış Durumu:</strong>
+                @if (Model.IsSold)
+                {
+                    <span class="badge bg-danger">Satıldı (Sözleşmesi Var)</span>
+                }
+                else
+                {
+                    <span class="badge bg-success">Elde Duruyor (Satışa Hazır)</span>
+                }
+            </div>
+
+            <div class="d-grid mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary">Envanter Listesine Geri Dön</a>
+            </div>
+        </div>
+    </div>
+</div>

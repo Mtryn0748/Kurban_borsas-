@@ -1,0 +1,33 @@
+﻿@model Kurban.Models.Customer
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Yeni Alıcı Bilgileri</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Müşteri Adı</label>
+                    <input asp-for="CustomerName" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Müşteri Soyadı</label>
+                    <input asp-for="CustomerSurname" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Telefon Numarası</label>
+                    <input asp-for="CustomerPhone" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">E-Posta Adresi</label>
+                    <input asp-for="CustomerEmail" type="email" class="form-control" />
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Müşteriyi Kaydet</button>
+                    <a asp-action="Index" class="btn btn-link text-secondary">Listeye Dön</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

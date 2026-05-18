@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurbanlık Takip Sistemi</title>
+    <link rel="stylesheet" href="~/css/admin-theme.css" /> @* Admin teması için özel CSS dosyası *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-cow"></i> Kurbanlık Borsası</h2>
+            </div>
+            <nav class="sidebar-menu">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    // Giriş yapan kullanıcının rolünü Claim üzerinden okuyoruz
+                    var userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+                    @if (userRole == "Admin")
+                    {
+                        <a asp-controller="Home" asp-action="Index"><i class="fa-solid fa-chart-line"></i> Yönetim Paneli</a>
+                        <a asp-controller="Breed" asp-action="Index"><i class="fa-solid fa-tags"></i> Kurban Türleri</a>
+                        <a asp-controller="Animal" asp-action="Index"><i class="fa-solid fa-paw"></i> Hayvan Envanteri</a>
+                        <a asp-controller="Sale" asp-action="IncomingBids"><i class="fa-solid fa-comments-dollar"></i> Gelen Teklifler</a>
+                        <a asp-controller="Sale" asp-action="Index"><i class="fa-solid fa-file-invoice-dollar"></i> Satış Sözleşmeleri</a>
+                        <a asp-controller="Sale" asp-action="Create"><i class="fa-solid fa-cart-plus"></i> Yeni Satış Yap</a>
+                    }
+                    else if (userRole == "Buyer")
+                    {
+                        <a asp-controller="Buyer" asp-action="Index"><i class="fa-solid fa-cow"></i> Satın Aldıklarım</a>
+                        <a asp-controller="Buyer" asp-action="Market"><i class="fa-solid fa-store"></i> Satılık Hayvanlar</a>
+                        <a asp-controller="Buyer" asp-action="MyBids"><i class="fa-solid fa-comments-dollar"></i>Tekliflerim</a>
+                        <a asp-controller="Buyer" asp-action="Profile"><i class="fa-solid fa-user-gear"></i> Profil</a>
+                    }
+                }
+            </nav>
+        </aside>
+
+        <div class="main-layout">
+            <header class="topbar">
+                <div class="user-info">
+                    <span>
+                        Hoş geldin, <strong>@User.Identity.Name</strong>
+                        <small class="text-muted">(@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)</small>
+                    </span>
+                    <a asp-controller="Home" asp-action="Logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</a>
+                </div>
+            </header>
+
+            <main class="content-body">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        // Toastr yapılandırma ayarları
+        toastr.options = { "positionClass": "toast-top-right", "progressBar": true, "timeOut": "4000" };
+
+        // Backend'den gelen TempData bildirimlerini ekrana basma tetikleyicisi
+        @if (TempData["ToastSuccess"] != null)
+        {
+                <text>toastr.success('@TempData["ToastSuccess"]');</text>
+        }
+        @if (TempData["ToastError"] != null)
+        {
+                <text>toastr.error('@TempData["ToastError"]');</text>
+        }
+    </script>
+</body>
+</html>

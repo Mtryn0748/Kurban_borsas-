@@ -1,0 +1,45 @@
+﻿@model Kurban.Models.User
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-user-gear"></i> Profil Bilgilerimi Güncelle</h4>
+        </div>
+        <div class="card-body">
+            @if (ViewBag.Success != null)
+            {
+                <div class="alert alert-success text-center">@ViewBag.Success</div>
+            }
+            <form asp-action="Profile" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Role" />
+                <input type="hidden" asp-for="Email" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Adınız</label>
+                        <input asp-for="Name" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Soyadınız</label>
+                        <input asp-for="Surname" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">İletişim Numarası</label>
+                    <input asp-for="Phone" class="form-control" required />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Giriş Şifresi</label>
+                    <input asp-for="Password" type="text" class="form-control" required />
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">Bilgilerimi Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

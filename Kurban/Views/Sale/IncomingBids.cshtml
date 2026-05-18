@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Kurban.Models.Bid>
+
+<div class="container mt-4 text-dark">
+    <h2>Müşteri Pazarlık Teklifleri (Gelen Panel)</h2>
+    <p class="text-muted">Sıralı pazarlık sistemi: Çiftlik beklentinize bakarak gelen teklifleri mantıklı şekilde değerlendirebilirsiniz.</p>
+
+    <div class="card shadow border-0 mt-3" style="border-radius: 12px; overflow: hidden;">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th class="ps-3">Müşteri</th>
+                    <th>Hayvan (Küpe No)</th>
+                    <th>Canlı Ağırlık</th>
+                    <th>Çiftlik Beklentisi (Eder)</th>
+                    <th>Müşteri Teklifi</th>
+                    <th>Pazarlık Durumu</th>
+                    <th class="pe-3 text-center" style="width: 400px;">Yönetim Aksiyonları</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    // Lojik Koruma: Hayvanı kaydederken girdiğin Kilo * Kg Fiyatı üzerinden gerçek beklenti hesaplanır
+                    decimal farmExpectation = item.Animal != null ? item.Animal.AnimalWeight * item.Animal.PricePerKg : 0;
+
+                    <tr>
+                        <td class="ps-3">
+                            <div class="fw-bold text-primary">@item.Buyer?.Name @item.Buyer?.Surname</div>
+                            <small class="text-muted"><i class="fa-solid fa-phone"></i> @item.Buyer?.Phone</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary p-2">@item.Animal?.AnimalEarringNumber</span>
+                            <div class="small text-muted mt-1">@item.Animal?.AnimalName</div>
+                        </td>
+                        <td><strong class="text-dark">@item.Animal?.AnimalWeight.ToString("0.000")</strong> kg</td>
+
+                        <td>
+                            <span class="fw-bold text-secondary" style="font-size: 15px;">
+                                @farmExpectation.ToString("C2")
+                            </span>
+                            <div class="small text-muted" style="font-size: 11px;">(@item.Animal?.PricePerKg.ToString("0.00") ₺ / kg)</div>
+                        </td>
+
+                        <td><span class="fs-5 fw-bold text-success">@item.OfferPrice.ToString("C2")</span></td>
+                        <td>
+                            @if (item.Status == "Karşı Teklif Yapıldı")
+                            {
+                                <div class="alert alert-warning p-2 mb-0 border-0" style="font-size: 13px; font-weight:600; background-color:#fef08a; color:#854d0e;">
+                                    <i class="fa-solid fa-paper-plane"></i> Karşı Teklifiniz: <strong>@item.CounterPrice?.ToString("C2")</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="p-2 bg-light border rounded-3" style="font-size: 13px;">
+                                    <i class="fa-solid fa-comment-dots text-muted"></i> @item.BuyerNote
+                                </div>
+                            }
+                        </td>
+                        <td class="pe-3 text-center">
+                            @if (item.Status == "Karşı Teklif Yapıldı")
+                            {
+                                <div class="p-2 bg-light rounded-3 border border-dashed border-warning text-center">
+                                    <span class="text-warning fw-bold d-block" style="font-size: 13px;">
+                                        <i class="fa-solid fa-hourglass-half fa-spin"></i> TOP MÜŞTERİDE / YANIT BEKLENİYOR
+                                    </span>
+                                    <small class="text-muted">Alıcı teklifinizi inceleyip karar verecektir.</small>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column gap-2 p-2 bg-light rounded-3 border">
+                                    <form asp-action="AcceptBid" method="post" class="w-100">
+                                        <input type="hidden" name="bidId" value="@item.Id" />
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <select name="deliveryType" class="form-select form-select-sm py-2" required>
+                                                    <option value="Tesiste Kesilecek">Tesiste Kesim</option>
+                                                    <option value="Alıp Gidecek">Canlı Teslim</option>
+                                                    <option value="Kamyonla Eve Teslim">Adrese Teslim</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" name="slaughterPrice" class="form-control form-control-sm py-2" placeholder="Hizmet Bedeli" value="0" required />
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-sm btn-success w-100 py-2 fw-bold shadow-sm">
+                                                    <i class="fa-solid fa-handshake"></i> Müşteri Teklifini Onayla (El Sıkış)
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="d-flex gap-2 justify-content-between align-items-center mt-1 pt-2" style="border-top: 1px dashed #cbd5e1;">
+                                        <form asp-action="CounterOffer" method="post" class="d-flex gap-1 align-items-center" style="width: 70%;">
+                                            <input type="hidden" name="bidId" value="@item.Id" />
+                                            <input type="number" name="counterPrice" class="form-control form-control-sm py-2" placeholder="Karşı Fiyat Önerin" required />
+                                            <button type="submit" class="btn btn-sm btn-warning text-dark fw-bold py-2 px-2">Ara-Bul</button>
+                                        </form>
+
+                                        <form asp-action="RejectBid" method="post" style="width: 28%;">
+                                            <input type="hidden" name="bidId" value="@item.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger w-100 py-2">Reddet</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

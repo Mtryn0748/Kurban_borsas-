@@ -1,0 +1,76 @@
+﻿@model Kurban.Models.User
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - Kurbanlık Takip</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin-theme.css" />
+    <style>
+        body {
+            background-color: var(--bg-main-content);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-card {
+            width: 450px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-card">
+        <div class="text-center mb-4">
+            <h3 style="color: var(--accent-blue); font-weight: 700;">Yeni Alıcı Hesabı</h3>
+            <p class="text-muted">Kurbanlıklarınızı takip etmek için kayıt olun</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center p-2">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Register" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Adınız</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Soyadınız</label>
+                    <input asp-for="Surname" class="form-control" required />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">E-Posta</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="adın@gmail.com" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Telefon</label>
+                <input asp-for="Phone" class="form-control" placeholder="05XXXXXXXXX" required />
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Şifre Belirleyin</label>
+                <input asp-for="Password" type="password" class="form-control" required />
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Hesabımı Oluştur</button>
+                <a asp-action="Login" class="btn btn-link text-secondary">Zaten Hesabım Var, Giriş Yap</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Kurban.Models.Bid>
+
+<div class="container mt-4 text-dark">
+    <h2>Pazarlık Tekliflerim ve Durumları</h2>
+    <p class="text-muted">Sıralı pazarlık sistemi: Top çiftlik sahibindeyken hamle yapamazsınız, dönüş yapıldığında sarı panel açılır.</p>
+    <hr />
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0" style="border-radius: 12px; background: #fff; padding: 15px;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="text-primary mb-0 fw-bold">@item.Animal?.AnimalName (@item.Animal?.Breed?.BreedName)</h5>
+                                @if (item.Status == "Beklemede")
+                                {
+                                    <span class="badge bg-warning text-dark p-2">Çiftlikte Sıra</span>
+                                }
+                                else if (item.Status == "Karşı Teklif Yapıldı")
+                                {
+
+                                    <span class="badge bg-info text-dark p-2">Sizde Sıra!</span>
+                                }
+                                else if (item.Status == "Onaylandı")
+                                {
+
+                                    <span class="badge bg-success p-2">Onaylandı</span>
+                                }
+                                else
+                                {
+
+                                    <span class="badge bg-danger p-2">@item.Status</span>
+                                }
+                            </div>
+                            <h6 class="text-muted">Küpe No: @item.Animal?.AnimalEarringNumber | @item.Animal?.AnimalWeight.ToString("0.000") kg</h6>
+                            <hr />
+
+                            @if (item.Status == "Beklemede")
+                            {
+                                <div class="p-3 bg-light rounded-3 border text-center my-3">
+                                    <span class="text-muted fw-bold d-block" style="font-size: 14px;">
+                                        <i class="fa-solid fa-clock fa-spin text-warning"></i> Sizin Son Teklifiniz: <span class="text-primary">@item.OfferPrice.ToString("C2")</span>
+                                    </span>
+                                    <small class="text-muted d-block mt-1">Çiftlik sahibinin bu fiyata el sıkışması veya karşı teklif atması bekleniyor.</small>
+                                </div>
+                            }
+                            else if (item.Status == "Karşı Teklif Yapıldı" && item.CounterPrice.HasValue)
+                            {
+                                <div class="alert alert-warning p-3 mt-3 border-0 shadow-sm" style="border-radius: 8px; color: #1e293b; background-color: #fef08a;">
+                                    <div class="fw-bold mb-1 text-dark"><i class="fa-solid fa-bell text-warning"></i> Çiftlik Sahibi Yeni Karşı Teklif Gönderdi:</div>
+                                    <h3 class="fw-bold text-success mb-3">@item.CounterPrice.Value.ToString("C2")</h3>
+
+                                    <div class="d-flex gap-2 flex-column">
+                                        <div class="d-flex gap-2 w-100">
+                                            <form asp-controller="Buyer" asp-action="AcceptCounterOffer" method="post" style="width: 50%;">
+                                                <input type="hidden" name="bidId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success w-100 fw-bold py-2 shadow-sm">
+                                                    <i class="fa-solid fa-check"></i> Kabul Et (Satın Al)
+                                                </button>
+                                            </form>
+
+                                            <form asp-controller="Buyer" asp-action="RejectCounterOffer" method="post" style="width: 50%;">
+                                                <input type="hidden" name="bidId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger w-100 fw-bold py-2 bg-white">
+                                                    <i class="fa-solid fa-xmark"></i> Pazarlığı Bitir (Reddet)
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <form asp-controller="Buyer" asp-action="CounterBargain" method="post" class="mt-2 pt-2 border-top border-warning">
+                                            <input type="hidden" name="bidId" value="@item.Id" />
+                                            <div class="input-group">
+                                                <input type="number" name="newOfferPrice" class="form-control form-control-sm" placeholder="Benim Yeni Fiyat Önerim ₺" required />
+                                                <button type="submit" class="btn btn-primary btn-sm fw-bold">
+                                                    <i class="fa-solid fa-paper-plane"></i> Geri Fırlat
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="border-top: 1px solid #f1f5f9;">
+                                <small class="text-muted">Teklif Tarihi: @item.BidDate.ToString("dd.MM.yyyy HH:mm")</small>
+                                @if (item.Status == "Beklemede")
+                                {
+                                    <form asp-controller="Buyer" asp-action="CancelBid" method="post">
+                                        <input type="hidden" name="bidId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-xs text-danger border-0 bg-transparent p-0" onclick="return confirm('Teklifinizi geri çekmek istiyor musiniz?')">
+                                            <i class="fa-solid fa-trash"></i> Teklifi Geri Çek
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted mt-5">
+                <h4><i class="fa-solid fa-comments-dollar fa-2x mb-2 d-block"></i> Henüz hiçbir hayvana pazarlık teklifi vermediniz.</h4>
+            </div>
+        }
+    </div>
+</div>

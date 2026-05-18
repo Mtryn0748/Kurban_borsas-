@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Kurban.Models.Sale>
+
+<div class="container mt-4 text-dark">
+    <div class="mb-4">
+        <h2>Kurban Satış Sözleşmeleri</h2>
+        <p class="text-muted">Sistem üzerinden gerçekleştirilen tüm resmi satışların listesi</p>
+    </div>
+
+    <div class="card shadow border-0" style="border-radius: 12px; overflow: hidden;">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th class="ps-3">Satış Tarihi</th>
+                    <th>Kurbanlık (Küpe No)</th>
+                    <th>Alıcı (Müşteri)</th>
+                    <th>Satış Türü</th>
+                    <th>Teslimat Türü</th>
+                    <th>Pazarlık Fiyatı</th>
+                    <th>Kesim / Nakliye</th>
+                    <th>Toplam Tutar</th>
+                    <th class="pe-3 text-center">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">@item.SaleDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td><strong>@(item.Animal != null ? item.Animal.AnimalEarringNumber : "Bilinmiyor")</strong></td>
+                            <td>@(item.Buyer != null ? (item.Buyer.Name + " " + item.Buyer.Surname) : "Bilinmiyor")</td>
+                            <td><span class="badge bg-primary px-3 py-2" style="border-radius: 20px;">@item.UsageType</span></td>
+                            <td><span class="badge bg-secondary px-3 py-2" style="border-radius: 20px;">@item.DeliveryType</span></td>
+                            <td>@item.SalePrice.ToString("C2")</td>
+                            <td>@item.SlaughterPrice.ToString("C2")</td>
+                            <td class="fw-bold text-success">
+                                @((item.SalePrice + item.SlaughterPrice).ToString("C2"))
+                            </td>
+                            <td class="pe-3 text-center">
+                                <a asp-action="Details" asp-route-id="@item.Id" target="_blank" class="btn btn-sm btn-outline-dark fw-bold">
+                                    <i class="fa-solid fa-eye"></i> Evrak Gör / Bas
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">
+                            <i class="fa-solid fa-folder-open fa-2x mb-2 d-block"></i>
+                            Henüz kayıtlı bir satış sözleşmesi bulunmamaktadır.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

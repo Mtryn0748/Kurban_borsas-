@@ -1,0 +1,124 @@
+﻿@model Kurban.Models.Sale
+
+<div class="container mt-4 text-dark no-print">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Resmi Sözleşme Önizleme</h2>
+            <p class="text-muted">Sözleşmeyi basmadan önce tüm detayları sistem içinden güvenle inceleyebilirsiniz.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary fw-bold"><i class="fa-solid fa-arrow-left"></i> Listeye Geri Dön</a>
+    </div>
+</div>
+
+<div class="container my-4 p-5 bg-white shadow border-0 print-sheet" style="max-width: 950px; border-radius: 16px; margin: auto; color: #000 !important;">
+    <div class="row align-items-center pb-4 mb-4" style="border-bottom: 2px dashed #cbd5e1;">
+        <div class="col-7">
+            <h2 class="fw-bold text-primary m-0 print-title" style="letter-spacing: -0.5px;">TARAYAN KURBANLIK TESİSLERİ</h2>
+            <small class="text-muted d-block mt-1">Modern Hayvancılık & Envanter Takip Otomasyonu</small>
+        </div>
+        <div class="col-5 text-end">
+            <h4 class="fw-bold text-dark mb-0">SATIŞ SÖZLEŞMESİ</h4>
+            <div class="text-muted small">No: #000@Model.Id</div>
+            <div class="text-muted small">Tarih: @Model.SaleDate.ToString("dd.MM.yyyy HH:mm")</div>
+        </div>
+    </div>
+
+    <div class="row mb-5" style="font-size: 15px;">
+        <div class="col-6">
+            <div class="bg-light p-3 rounded-3 h-100 border border-start-3 border-primary">
+                <h6 class="fw-bold text-primary mb-2 text-uppercase" style="font-size: 12px; letter-spacing: 1px;">Müşteri (Alıcı) Bilgileri</h6>
+                <div class="fs-5 fw-bold text-dark">@Model.Buyer?.Name @Model.Buyer?.Surname</div>
+                <div class="text-muted mt-1"><i class="fa-solid fa-phone small"></i> @Model.Buyer?.Phone</div>
+                <div class="text-muted"><i class="fa-solid fa-envelope small"></i> @Model.Buyer?.Email</div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="bg-light p-3 rounded-3 h-100 border border-start-3 border-success text-end">
+                <h6 class="fw-bold text-success mb-2 text-uppercase" style="font-size: 12px; letter-spacing: 1px;">Kurbanlık Canlı Hayvan Bilgileri</h6>
+                <div class="fs-5 fw-bold text-dark">Küpe No: @Model.Animal?.AnimalEarringNumber</div>
+                <div class="text-muted mt-1"><strong>Cins / Irk:</strong> @Model.Animal?.AnimalName (@Model.Animal?.Breed?.BreedName)</div>
+                <div class="text-muted"><strong>Net Canlı Ağırlık:</strong> @Model.Animal?.AnimalWeight.ToString("0.000") kg</div>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-calculator text-secondary"></i> Finansal Dağılım ve Lojistik</h5>
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle text-center border-secondary">
+            <thead class="table-light border-secondary">
+                <tr>
+                    <th style="width: 25%;">Anlaşma Amacı</th>
+                    <th style="width: 30%;">Teslimat / Sevk Modeli</th>
+                    <th style="width: 20%;">Pazarlık Fiyatı</th>
+                    <th style="width: 25%;">Kesim & Hizmet Bedeli</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="fs-5 text-dark">
+                    <td><span class="badge bg-primary px-3 py-2" style="border-radius:20px;">@Model.UsageType</span></td>
+                    <td><strong>@Model.DeliveryType</strong></td>
+                    <td class="fw-bold">@Model.SalePrice.ToString("C2")</td>
+                    <td class="text-secondary">@Model.SlaughterPrice.ToString("C2")</td>
+                </tr>
+                <tr class="table-success border-secondary fs-4 fw-bold text-success">
+                    <td colspan="2" class="text-end text-dark pe-4 fs-5">GENEL TOPLAM TUTAR:</td>
+                    <td colspan="2" class="text-end pe-4 text-success fw-bold">
+                        @((Model.SalePrice + Model.SlaughterPrice).ToString("C2"))
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="my-4 p-3 bg-light rounded-3 border" style="font-size: 14px;">
+        <strong class="text-dark d-block mb-1"><i class="fa-solid fa-clipboard-list text-muted"></i> Resmi Sevk ve Sözleşme Notları:</strong>
+        <span class="text-secondary">@(string.IsNullOrEmpty(Model.Notes) ? "Özel bir sevk notu belirtilmemiştir." : Model.Notes)</span>
+    </div>
+
+    <div class="row mt-5 pt-4 text-center text-dark" style="font-size: 15px;">
+        <div class="col-6">
+            <div class="fw-bold">Teslim Eden (Çiftlik Yetkilisi)</div>
+            <div class="small text-muted mt-1">Muharrem TARAYAN</div>
+            <div class="mt-4 border-bottom m-auto" style="width: 150px; height: 40px; border-style: dashed !important;">İmza</div>
+        </div>
+        <div class="col-6">
+            <div class="fw-bold">Teslim Alan (Alıcı Müşteri)</div>
+            <div class="small text-muted mt-1">@Model.Buyer?.Name @Model.Buyer?.Surname</div>
+            <div class="mt-4 border-bottom m-auto" style="width: 150px; height: 40px; border-style: dashed !important;">İmza</div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5 pt-3 no-print" style="border-top: 1px dashed #cbd5e1;">
+        <button onclick="window.print();" class="btn btn-success btn-lg px-5 shadow fw-bold">
+            <i class="fa-solid fa-print"></i> Bu Sözleşmeyi Yazdır / PDF Al
+        </button>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .no-print, .sidebar, header, .navbar, nav, .main-header, footer {
+            display: none !important;
+        }
+
+        body {
+            background: white !important;
+            color: black !important;
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+        .print-sheet {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0px !important;
+            margin: 0px !important;
+            max-width: 100% !important;
+            color: #000 !important;
+        }
+
+        .print-title {
+            color: #000 !important;
+        }
+    }
+</style>

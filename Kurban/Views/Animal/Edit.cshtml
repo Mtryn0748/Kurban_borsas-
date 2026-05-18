@@ -1,0 +1,59 @@
+﻿@model Kurban.Models.Animal
+
+<div class="container mt-5">
+    <div class="card shadow border-0" style="max-width: 700px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="fa-solid fa-pen-to-square"></i> Kafa Kağıdı Güncelleme</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Küpe Numarası</label>
+                        <input asp-for="AnimalEarringNumber" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ana Tür</label>
+                        <select asp-for="BreedId" class="form-select" asp-items="ViewBag.Breeds" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Irkı / Belirgin Özelliği</label>
+                        <input asp-for="AnimalName" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Yaşı / Dönemi</label>
+                        <input asp-for="Age" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mevcut Canlı Ağırlık (kg)</label>
+                        <input asp-for="AnimalWeight" type="number" class="form-control" step="0.01" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Envanter Sınıflandırması</label>
+                        <select asp-for="InventoryStatus" class="form-select" required>
+                            <option value="Satılık">Satılık (Pazara Çıkacak)</option>
+                            <option value="Damızlık">Damızlık (Satışı Yasak)</option>
+                            <option value="Yeni Doğan">Yeni Doğan (Sütten Kesilmedi)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="IsSold" />
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">Değişiklikleri Kaydet</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
